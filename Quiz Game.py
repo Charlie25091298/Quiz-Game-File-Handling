@@ -49,12 +49,7 @@ def draw() :
 
 
 def gameover() :
-    global question
-    global Gameover
     global seconds
-    Gameover = True
-    
-    
     seconds = 0
 
 
@@ -66,20 +61,24 @@ def on_mouse_down(pos) :
     global points
     global seconds
     global question
+    global Gameover
+    global Gamewon
     answervalue = 1
     for rectanswer in rectanswers :
         if rectanswer.collidepoint(pos) :
             if answervalue == int(question[5]) :
                 currentquestion +=1
-                if currentquestion >= numberofquestions :
+                points += 1
+                if currentquestion == numberofquestions :
+                    Gamewon = True
                     question = ["Game Won! Well Done! " + str(points),"-","-","-","-",5]
                     gameover()
                 else:
-                    points += 1
                     seconds = 10
                     getquestion()   
             else :
                 question = ["Game Over! Score : " + str(points),"-","-","-","-",5]
+                Gameover = True
                 gameover()
         answervalue +=1       
        
@@ -91,11 +90,13 @@ def on_mouse_down(pos) :
 def update_time() :
     global seconds
     global question
+    global Gameover
     if seconds > 0 :
         seconds -= 1
-    else :
+    elif seconds == 0 and Gameover == False :
         question = ["Game Over! Score : " + str(points),"-","-","-","-",5]
-        gameover()
+        gameover() 
+
 
 clock.schedule_interval(update_time,1)
 
